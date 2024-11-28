@@ -5,6 +5,9 @@ $method = $post ? 'POST' : 'GET';
 
 @endphp
 <form {{$attributes->class('space-y-4 flex flex-col')}} method="{{$method}}">
-  @csrf
+  @if($method != 'GET')
+    @csrf
+  @endif
+
  {{$slot}}
 </form>
