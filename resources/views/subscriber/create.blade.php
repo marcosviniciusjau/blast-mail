@@ -1,29 +1,30 @@
 <x-layouts.app>
     <x-slot name="header">
             <x-h2>
-                {{ __('Email list') }} {{ __('Create a new list') }}
+                {{ __('Email list') }} > {{$emailList->title}} > {{ __('Add a new subscriber') }}
             </x-h2>
     </x-slot>
 <x-card>
-    <x-form :action="route('email-list.store')" post enctype="multipart/form-data">
+    <x-form :action="route('subscribers.create', $emailList)" post>
         <div>
-            <x-input-label for="title" :value="__('Title')" />
-            <x-text-input id="title" class="block mt-1 w-full" name="title" :value="old('title')" autofocus />
-            <x-input-error :messages="$errors->get('title')" class="mt-2" />
+            <x-input.label for="name" :value="__('Name')" />
+            <x-input.text id="name" class="block mt-1 w-full" name="name" :value="old('name')" autofocus />
+            <x-input.error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-            <div>
-                <x-input-label for="file" :value="__('List File')" />
-                <x-text-input id="file" class="block mt-1 w-full" type="file" accept=".csv" name="file" :value="old('file')" autofocus />
-                <x-input-error :messages="$errors->get('file')" class="mt-2" />
-            </div>
+        <div>
+            <x-input.label for="email" :value="__('Email')" />
+            <x-input.text id="email" class="block mt-1 w-full" name="email" :value="old('email')" autofocus />
+            <x-input.error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
         <div class="flex- items-center space-x-4">
-            <x-secondary-button type="reset">
+            <x-button.link secondary :href="route('subscribers.index', $emailList)">
                 {{ __('Cancel') }}
-            </x-secondary-button>
-            <x-primary-button type="submit">
+            </x-button.link>
+            <x-button.primary type="submit">
                 {{ __('Save') }}
-            </x-primary-button>
+            </x-button.primary>
         </div>
        
     </x-form>

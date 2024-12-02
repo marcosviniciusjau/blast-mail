@@ -7,19 +7,22 @@
 
     <x-card class="space-y-4">
             <div class="flex justify-between">
-                <x-link-button href="{{ route('subscribers.create', $emailList) }}">
+                <x-button.link href="{{ route('subscribers.create', $emailList) }}">
                     {{ __('Add a new subscriber') }}
-                </x-link-button>   
-                <x-form :action="route('subscribers.index', $emailList)" class="w-2/5" x-data x-ref="form">
-                    <label for="show_trash" class="inline-flex items-center">
-                        <input id="show_trash" type="checkbox"
-                        value="1"
-                        @click="$refs.form.submit()" @if($showTrash) checked @endif
-                        class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" 
-                        name="showTrash">
-                        <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Show trash') }}</span>
-                    </label>
-                    <x-text-input name="search" :placeholder="__('Search')" :value="$search"/>
+                </x-button.link>   
+                <x-form 
+                    :action="route('subscribers.index', $emailList)" 
+                    x-data x-ref="form"
+                    class="w-3/5 flex space-x-4 items-center"
+                    flat
+                >
+                 <x-input.checkbox   
+                    name="showTrash" 
+                    @click="$refs.form.submit()"
+                    :label="__('Show trash')"
+                    value="1"
+                    :checked="$showTrash"/>
+                    <x-input.text name="search" :placeholder="__('Search')" :value="$search" class="w-full"/>
                 </x-form>
             </div>
             <x-table :headers="['#', __('Name'), __('Email'), __('Actions')]">
@@ -37,12 +40,11 @@
                                         flat
                                         onsubmit="return confirm('{{ __('Are you sure?')}}')"
                                     >
-                                    <x-secondary-button type="submit"> Delete </x-secondary-button>
+                                    <x-button.secondary type="submit"> Delete </x-button.secondary>
                                 </x-form>
                                 @else
-                                <span class="rounded-md w-fit border border-red-500 bg-red-500 px-2 py-1 text-xs font-medium text-white dark:border-red-500 dark:bg-red-500 dark:text-white">
-                                    Deleted
-                                </span>
+                                <x-badge danger>{{__('Deleted')}}</x-badge>
+                                
                                 @endunless
                             </x-table.td>
                         </tr>

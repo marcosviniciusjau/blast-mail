@@ -5,25 +5,25 @@
             </x-h2>
     </x-slot>
 <x-card>
-    <x-form :action="route('email-list.store')" post enctype="multipart/form-data">
+    <x-form :action="route('email-list.create')" post enctype="multipart/form-data">
         <div>
-            <x-input-label for="title" :value="__('Title')" />
-            <x-text-input id="title" class="block mt-1 w-full" name="title" :value="old('title')" autofocus />
-            <x-input-error :messages="$errors->get('title')" class="mt-2" />
+            <x-input.label for="title" :value="__('Title')" />
+            <x-input.text id="title" class="block mt-1 w-full" name="title" :value="old('title')" autofocus />
+            <x-input.error :messages="$errors->get('title')" class="mt-2" />
         </div>
 
             <div>
-                <x-input-label for="file" :value="__('List File')" />
-                <x-text-input id="file" class="block mt-1 w-full" type="file" accept=".csv" name="file" :value="old('file')" autofocus />
-                <x-input-error :messages="$errors->get('file')" class="mt-2" />
+                <x-input.label for="file" :value="__('List File')" />
+                <x-input.text id="file" class="block mt-1 w-full" type="file" accept=".csv" name="file" :value="old('file')" autofocus />
+                <x-input.error :messages="$errors->get('file')" class="mt-2" />
             </div>
         <div class="flex- items-center space-x-4">
-            <x-secondary-button type="reset">
+            <x-button.secondary type="reset">
                 {{ __('Cancel') }}
-            </x-secondary-button>
-            <x-primary-button type="submit">
+            </x-button.secondary>
+            <x-button.primary type="submit">
                 {{ __('Save') }}
-            </x-primary-button>
+            </x-button.primary>
         </div>
        
     </x-form>
