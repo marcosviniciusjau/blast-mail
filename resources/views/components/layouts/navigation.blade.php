@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('email-list.index')" :active="request()->routeIs('email-list.*')">
                         {{ __('Email list') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('template.index')" :active="request()->routeIs('template.*')">
+                        {{ __('Template') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -75,6 +78,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('email-list.index')" :active="request()->routeIs('email-list.*')">
                 {{ __('Email list') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('template.index')" :active="request()->routeIs('template.*')">
+                {{ __('Template') }}
             </x-responsive-nav-link>
         </div>
 
