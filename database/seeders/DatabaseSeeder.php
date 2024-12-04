@@ -17,14 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            UserSeeder::class,
+            TemplateSeeder::class,
+            EmailListSeeder::class,
+            CampaignSeeder::class
         ]);
-
-        EmailList::factory()->count(50)->create()
-        ->each(function(EmailList $list){
-            Subscriber::factory()->count(rand(50,200))->create(['email_list_id' => $list->id]);
-        });
     }
 }
