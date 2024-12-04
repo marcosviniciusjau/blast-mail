@@ -2,41 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\EmailList;
 use App\Models\Subscriber;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
+
 class SubscriberController extends Controller
 {
     public function index(EmailList $emailList)
     {
         $search = request()->search;
-        $showTrash= request()->get('showTrash',false);
-        
+        $withTrashed = request()->get('withTrashed', false);
+
         return view('subscriber.index', [
             'emailList' => $emailList,
             'subscribers' => $emailList
                 ->subscribers()
                 ->with('emailList')
-                ->when($showTrash,fn(Builder $query) => $query->withTrashed())
-                ->when($search,fn(Builder $query) => $query->where('name', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->orWhere('id', '=', $search))
-                ->paginate(5),
+                ->when($withTrashed, fn (Builder $query) => $query->withTrashed())
+                ->when($search, fn (Builder $query) => $query->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('id', '=', $search))
+                ->paginate(5)
+                ->appends(compact('search'), 'withTrashed'),
             'search' => $search,
-            'showTrash' => $showTrash
+            'withTrashed' => $withTrashed,
         ]);
     }
 
-    public function create(EmailList $emailList){
+    public function create(EmailList $emailList)
+    {
         return view('subscriber.create', compact('emailList'));
     }
 
-    
-    public function store(EmailList $emailList){
+    public function store(EmailList $emailList)
+    {
         $data = request()->validate([
-            'name' => ['required','string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('subscribers')->where('email_list_id', $emailList->id)],
         ]);
 
@@ -45,7 +47,8 @@ class SubscriberController extends Controller
         return to_route('subscribers.index', $emailList)->with('message', __('Subscriber created'));
     }
 
-    public function destroy(mixed $list,Subscriber $subscriber){
+    public function destroy(mixed $list, Subscriber $subscriber)
+    {
         $subscriber->delete();
 
         return back()->with('message', __('Subscriber deleted'));

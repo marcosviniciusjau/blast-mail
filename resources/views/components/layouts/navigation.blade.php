@@ -15,10 +15,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('campaigns.index')" :active="request()->routeIs('campaigns.*')">
+                        {{ __('Campaigns') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('email-list.index')" :active="request()->routeIs('email-list.*')">
                         {{ __('Email list') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('template.index')" :active="request()->routeIs('template.*')">
+                    <x-nav-link :href="route('templates.index')" :active="request()->routeIs('templates.*')">
                         {{ __('Template') }}
                     </x-nav-link>
                 </div>
@@ -79,8 +82,11 @@
             <x-responsive-nav-link :href="route('email-list.index')" :active="request()->routeIs('email-list.*')">
                 {{ __('Email list') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('template.index')" :active="request()->routeIs('template.*')">
+            <x-responsive-nav-link :href="route('templates.index')" :active="request()->routeIs('templates.*')">
                 {{ __('Template') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('campaigns.index')" :active="request()->routeIs('campaigns.*')">
+                {{ __('Campaigns') }}
             </x-responsive-nav-link>
         </div>
 

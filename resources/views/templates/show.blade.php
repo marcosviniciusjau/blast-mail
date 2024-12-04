@@ -8,7 +8,7 @@
     <x-card class="space-y-4">
     <div class="flex justify-between items-center">
         <div><span class="opacity-70"><{{ __('Name') }}:</span> {{$template->name}}</div>
-        <x-button.link secondary :href="route('template.index')"> {{__('Return')}} </x-button.link>
+        <x-button.link secondary :href="route('templates.index')"> {{__('Return')}} </x-button.link>
     </div>
     <div class="p-20 border-2 border-gray-400 rounded flex justify-center">{{$template->body}}</div>
     </x-card>
