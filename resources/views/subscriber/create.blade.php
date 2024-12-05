@@ -1,7 +1,7 @@
 <x-layouts.app>
     <x-slot name="header">
             <x-h2>
-                {{ __('Email list') }} > {{$emailList->title}} > {{ __('Add a new subscriber') }}
+                {{ __('Subscribers') }} > {{$emailList->title}} > {{ __('Add a new subscriber') }}
             </x-h2>
     </x-slot>
 <x-card>

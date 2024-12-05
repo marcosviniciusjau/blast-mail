@@ -28,11 +28,35 @@ class CampaignController extends Controller
         ]);
     }
 
+    public function create(?string $tab = null){
+        return view('campaigns.create',[
+            'tab' => $tab,
+            'form'=> match($tab){
+                'template' => '_template',
+                'schedule' => '_schedule',
+                default => '_config',
+            },
+        ]);
+    }
+
     public function destroy(Campaign $campaign)
     {
         $campaign->delete();
 
         return back()->with('message', __('Campaign deleted'));
+    }
+
+    public function store(?string $tab = null){
+        if(blank($tab)){
+          $data = request()->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'subject' => ['required', 'string', 'max:40'],
+                'email_list_id'=>['nullable'],
+                'template_id'=>['nullable'],
+            ]);
+            session()->put('campaings::create', $data);
+            return to_route('campaigns.create', ['tab' => 'template']);
+        }
     }
 
     public function restore(Campaign $campaign)
@@ -41,4 +65,5 @@ class CampaignController extends Controller
 
         return back()->with('message', __('Campaign restored'));
     }
+    
 }
