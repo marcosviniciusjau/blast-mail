@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Campaign extends Model
 {
-    /** @use HasFactory<\Database\Factories\CampaignFactory> */
     use HasFactory;
     use SoftDeletes;
+
+   
 }
