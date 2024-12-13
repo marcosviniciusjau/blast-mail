@@ -10,12 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class EmailListController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $search = request()->search;
+        $withTrashed = request()->get('withTrashed', false);
         $emailLists = EmailList::query()
         ->withCount('subscribers')
             ->when(
