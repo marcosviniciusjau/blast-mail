@@ -36,12 +36,27 @@ class CampaignController extends Controller
 
     public function create(?string $tab = null)
     {
+        $data = session()->get('campaings::create', [
+            'name' => null,
+            'subject' => null,
+            'email_list_id' => null,
+            'template_id' => null,
+            'body' => null,
+            'track_click' => null,
+            'track_open' => null,
+            'send_at' => null,
+            'send_when' => 'now',
+        ]);
 
         return view('campaigns.create',
             array_merge(
                 $this->when(blank($tab), fn () => [
                     'emailLists' => EmailList::query()->select(['id', 'title'])->orderBy('title')->get(),
                     'templates' => Template::query()->select(['id', 'name'])->orderBy('name')->get(),
+                ], fn () => []),
+                $this->when($tab == 'schedule', fn () => [
+                    'countEmails' => EmailList::find($data['email_list_id'])->subscribers()->count(),
+                    'template' => Template::find($data['template_id'])->name,
                 ], fn () => []),
                 [
                     'tab' => $tab,
@@ -51,16 +66,7 @@ class CampaignController extends Controller
                         'schedule' => '_schedule',
                         default => '_config',
                     },
-                    'data' => session()->get('campaings::create', [
-                        'name' => null,
-                        'subject' => null,
-                        'email_list_id' => null,
-                        'template_id' => null,
-                        'body' => null,
-                        'track_click' => null,
-                        'track_open' => null,
-                        'send_at' => null,
-                    ]),
+                    'data' => $data,
                 ]
             )
         );
@@ -84,6 +90,7 @@ class CampaignController extends Controller
 
         return response()->redirectTo($toRoute);
     }
+
     public function restore(Campaign $campaign)
     {
         $campaign->restore();
