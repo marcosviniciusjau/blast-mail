@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CampaignStoreRequest;
+use App\Jobs\SendEmailCampaign;
 use App\Models\Campaign;
 use App\Models\EmailList;
 use App\Models\Template;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\Conditionable;
+
+use function PHPUnit\Framework\isNull;
 
 class CampaignController extends Controller
 {
@@ -32,6 +35,16 @@ class CampaignController extends Controller
             'search' => $search,
             'withTrashed' => $withTrashed,
         ]);
+    }
+
+    public function show(Campaign $campaign, ?string $what = null)
+    {
+        if(isNull($what)){
+            return to_route('campaigns.show', ['campaign' => $campaign, 'what' => 'statistics']);
+        }
+        abort_unless(in_array($what, ['statistics', 'open', 'clicked']), 404);
+
+        return view('campaigns.show', compact('campaign','what'));
     }
 
     public function create(?string $tab = null)
@@ -85,7 +98,9 @@ class CampaignController extends Controller
         $toRoute = $request->getToRoute();
 
         if ($tab == 'schedule') {
-            Campaign::create($data);
+            $campaign = Campaign::create($data);
+
+            SendEmailCampaign::dispatchAfterResponse($campaign);
         }
 
         return response()->redirectTo($toRoute);

@@ -8,9 +8,9 @@
     <div class="flex gap-2 overflow-x-auto border-b border-slate-300 dark:border-slate-700">
         @foreach ($tabs as $title => $route)
             @php
-
-                $selected = request()->getUri() === $route;
+              $selected = request()->getUri() == $route;
             @endphp
+
             <a @class([
                 'h-min px-4 py-2 text-sm',
                 'font-bold text-blue border-b-2 border-b-2 border-blue-700 dark:border-blue-600 dark:text-blue-600' => $selected,
