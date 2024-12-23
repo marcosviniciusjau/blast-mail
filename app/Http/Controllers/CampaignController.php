@@ -8,7 +8,6 @@ use App\Jobs\SendEmailsCampaign;
 use App\Models\Campaign;
 use App\Models\EmailList;
 use App\Models\Template;
-use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\Conditionable;
 
@@ -46,13 +45,13 @@ class CampaignController extends Controller
         $search = request()->search;
 
         $query = $campaign->mails()
-            ->when($what == 'statistics', fn(Builder $query) => $query->statistics()->get())
+            ->when($what == 'statistics', fn(Builder $query) => $query->statistics())
             ->when($what == 'open', fn(Builder $query) => $query->openings($search))
             ->when($what == 'clicked', fn(Builder $query) => $query->clicks($search))
             ->simplePaginate(5)->withQueryString();
 
             if($what == 'statistics'){
-                $query->$query->first()->toArray();
+                $query=$query->first()->toArray();
             }
         return view('campaigns.show', compact('campaign', 'what', 'search', 'query'));
     }

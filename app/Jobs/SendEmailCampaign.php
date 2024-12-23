@@ -23,7 +23,7 @@ class SendEmailsCampaign implements ShouldQueue
     {
         foreach ($this->campaign->emailList->subscribers as $subscriber) {
 
-            CampaignMail::query()
+            $mail = CampaignMail::query()
                 ->create([
                     'campaign_id' => $this->campaign->id,
                     'subscriber_id' => $this->subscriber->id,
@@ -32,7 +32,7 @@ class SendEmailsCampaign implements ShouldQueue
 
             Mail::to($this->subscriber->email)->later(
                 $this->campaign->send_at,
-                new EmailCampaign($this->campaign));
+                new EmailCampaign($this->campaign,$mail));
         }
     }
 }
