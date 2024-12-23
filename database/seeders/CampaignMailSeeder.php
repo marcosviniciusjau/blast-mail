@@ -20,7 +20,7 @@ class CampaignMailSeeder extends Seeder
                 CampaignMail::factory()
                 ->create([
                     'campaign_id' => $campaign->id,
-                    'subscriber' => $subscriber->id,
+                    'subscriber_id' => $subscriber->id,
                     'sent_at' => $campaign->sent_at,
                 ]);
             }

@@ -6,9 +6,9 @@ use App\Http\Requests\CampaignShowRequest;
 use App\Http\Requests\CampaignStoreRequest;
 use App\Jobs\SendEmailsCampaign;
 use App\Models\Campaign;
-use App\Models\CampaignMail;
 use App\Models\EmailList;
 use App\Models\Template;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\Conditionable;
 
@@ -42,21 +42,21 @@ class CampaignController extends Controller
         if ($redirect = $request->checkWhat()) {
             return $redirect;
         }
-        if (is_null($what)) {
-            return to_route('campaigns.show', ['campaign' => $campaign, 'what' => 'statistics']);
-        }
-        abort_unless(in_array($what, ['statistics', 'open', 'clicked']), 404);
 
-        $search = request()->search;  
-        $query = $campaign
-        ->mails()
-        ->select([
-            
-        ])
-        ->get();
+        $search = request()->search;
 
-        return view('campaigns.show', compact('campaign', 'what', 'search'));
+        $query = $campaign->mails()
+            ->when($what == 'statistics', fn(Builder $query) => $query->statistics()->get())
+            ->when($what == 'open', fn(Builder $query) => $query->openings($search))
+            ->when($what == 'clicked', fn(Builder $query) => $query->clicks($search))
+            ->simplePaginate(5)->withQueryString();
+
+            if($what == 'statistics'){
+                $query->$query->first()->toArray();
+            }
+        return view('campaigns.show', compact('campaign', 'what', 'search', 'query'));
     }
+
 
     public function create(?string $tab = null)
     {

@@ -26,7 +26,7 @@ class SendEmailsCampaign implements ShouldQueue
             CampaignMail::query()
                 ->create([
                     'campaign_id' => $this->campaign->id,
-                    'subscriber' => $this->subscriber->id,
+                    'subscriber_id' => $this->subscriber->id,
                     'sent_at' => $this->campaign->sent_at,
                 ]);
 

@@ -20,10 +20,10 @@ class CampaignMailFactory extends Factory
     {
         return [
             'campaign_id' => Campaign::factory(),   
-            'subscriber' => Subscriber::factory(),
+            'subscriber_id' => Subscriber::factory(),
             'sent_at' => fake()->dateTime,
-            'clicks'=> fake()->numberBetween(1,10),
-            'openings'=> fake()->numberBetween(1,10),
+            'clicks'=> fake()->numberBetween(0,10),
+            'openings'=> fake()->numberBetween(0,10),
         ];
     }
 }

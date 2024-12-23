@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('campaign_mails', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained();
-            $table->foreignId('subscriber')->constrained();
+            $table->foreignId('subscriber_id')->constrained();
             $table->dateTime('sent_at')->nullable();
             $table->unsignedSmallInteger('clicks')->default(0);
             $table->unsignedSmallInteger('openings')->default(0);
