@@ -7,7 +7,7 @@
 
     <x-card class="space-y-4">
         <div class="flex justify-between">
-            <x-button.link href="{{ route('campaigns.create') }}">
+            <x-button.link :href="route('campaigns.create')">
                 {{ __('Create new campaign') }}
             </x-button.link>
             <x-form :action="route('campaigns.index')" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>

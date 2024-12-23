@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CampaignShowRequest;
 use App\Http\Requests\CampaignStoreRequest;
-use App\Jobs\SendEmailCampaign;
+use App\Jobs\SendEmailsCampaign;
 use App\Models\Campaign;
+use App\Models\CampaignMail;
 use App\Models\EmailList;
 use App\Models\Template;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\Conditionable;
-
-use function PHPUnit\Framework\isNull;
 
 class CampaignController extends Controller
 {
@@ -37,14 +37,25 @@ class CampaignController extends Controller
         ]);
     }
 
-    public function show(Campaign $campaign, ?string $what = null)
+    public function show(CampaignShowRequest $request, Campaign $campaign, ?string $what = null)
     {
-        if(isNull($what)){
+        if ($redirect = $request->checkWhat()) {
+            return $redirect;
+        }
+        if (is_null($what)) {
             return to_route('campaigns.show', ['campaign' => $campaign, 'what' => 'statistics']);
         }
         abort_unless(in_array($what, ['statistics', 'open', 'clicked']), 404);
 
-        return view('campaigns.show', compact('campaign','what'));
+        $search = request()->search;  
+        $query = $campaign
+        ->mails()
+        ->select([
+            
+        ])
+        ->get();
+
+        return view('campaigns.show', compact('campaign', 'what', 'search'));
     }
 
     public function create(?string $tab = null)
@@ -75,9 +86,9 @@ class CampaignController extends Controller
                     'tab' => $tab,
 
                     'form' => match ($tab) {
-                        'template' => '_template',
-                        'schedule' => '_schedule',
-                        default => '_config',
+                        'template' => '._template',
+                        'schedule' => '._schedule',
+                        default => '._config',
                     },
                     'data' => $data,
                 ]
@@ -100,7 +111,7 @@ class CampaignController extends Controller
         if ($tab == 'schedule') {
             $campaign = Campaign::create($data);
 
-            SendEmailCampaign::dispatchAfterResponse($campaign);
+            SendEmailsCampaign::dispatchAfterResponse($campaign);
         }
 
         return response()->redirectTo($toRoute);

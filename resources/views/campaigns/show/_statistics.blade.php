@@ -1,5 +1,5 @@
 <div class="gap-4 flex-col flex">
-  <x-alert no-icon success :title="__('Success')">
+  <x-alert noIcon success :title="__('Success')">
       {{ __('Your campaign has been sent to :count recipients.') }}
   </x-alert>
   <div class="bg-blue-100 grid grid-cols-3 gap-5">

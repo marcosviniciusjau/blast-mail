@@ -4,28 +4,33 @@ namespace App\Jobs;
 
 use App\Mail\EmailCampaign;
 use App\Models\Campaign;
+use App\Models\CampaignMail;
+use App\Models\Subscriber;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailCampaign implements ShouldQueue
+class SendEmailsCampaign implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(
-        public Campaign $campaign) {}
+        public Campaign $campaign,
+        public Subscriber $subscriber) {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         foreach ($this->campaign->emailList->subscribers as $subscriber) {
-            Mail::to($subscriber->email)->later(
+
+            CampaignMail::query()
+                ->create([
+                    'campaign_id' => $this->campaign->id,
+                    'subscriber' => $this->subscriber->id,
+                    'sent_at' => $this->campaign->sent_at,
+                ]);
+
+            Mail::to($this->subscriber->email)->later(
                 $this->campaign->send_at,
                 new EmailCampaign($this->campaign));
         }
