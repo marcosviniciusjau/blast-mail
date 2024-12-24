@@ -17,7 +17,7 @@ class CampaignFactory extends Factory
             'template_id' => Template::factory(),
             'track_click' => fake()->boolean,
             'track_open' => fake()->boolean,
-            'body' => fake()->sentences(3, true),
+            'body' => fake()->sentences(3, true) . '<a href="https://www.google.com">Clique aqui</a>',
             'created_at' => fake()->dateTimeBetween('-7 days', 'now'),
             'updated_at' => fake()->dateTimeBetween('-7 days', 'now'),
             'deleted_at' => fake()->boolean ? fake()->dateTimeBetween('-7 days', 'now') : null,

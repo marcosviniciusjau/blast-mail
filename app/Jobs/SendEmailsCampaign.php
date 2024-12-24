@@ -2,13 +2,10 @@
 
 namespace App\Jobs;
 
-use App\Mail\EmailCampaign;
 use App\Models\Campaign;
-use App\Models\CampaignMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
 
 class SendEmailsCampaign implements ShouldQueue
 {
@@ -20,10 +17,7 @@ class SendEmailsCampaign implements ShouldQueue
     public function handle(): void
     {
         foreach ($this->campaign->emailList->subscribers as $subscriber) {
-            Mail::to($subscriber->email)
-                ->later(
-                    $this->campaign->send_at,
-                    new EmailCampaign($this->campaign));
+            SendEmailsCampaign::dispatch($this->campaign, $subscriber);
     }
 }
 }
