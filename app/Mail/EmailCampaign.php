@@ -38,6 +38,7 @@ class EmailCampaign extends Mailable
         );
     }
 
+
     public function getBody(){
         $body = $this->campaign->body;
         $pattern = '/href="([^"]*)"/';

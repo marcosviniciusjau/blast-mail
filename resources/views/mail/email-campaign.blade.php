@@ -1,10 +1,10 @@
 <x-mail::message>
-{!! $body !!}
+    {!! $body !!}
 
-{{__('Thanks')}},<br>
+    {{ __('Thanks') }},<br>
 
-{{ config('app.name') }}
-
-<img src="{{route('tracking.openings',$mail)}}" style="display:none;"/>
+    {{ config('app.name') }}
+    <h1>não to confiando!</h1>
+    <img src="{{ route('tracking.openings', $mail) }}" style="display:none;" />
 </x-mail::message>
->
+

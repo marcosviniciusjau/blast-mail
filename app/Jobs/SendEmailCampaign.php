@@ -11,28 +11,30 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailsCampaign implements ShouldQueue
+class SendEmailCampaign implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public function __construct(
-        public Campaign $campaign,
-        public Subscriber $subscriber) {}
+        public Campaign $campaign) {}
 
     public function handle(): void
     {
-        foreach ($this->campaign->emailList->subscribers as $subscriber) {
 
-            $mail = CampaignMail::query()
-                ->create([
-                    'campaign_id' => $this->campaign->id,
-                    'subscriber_id' => $this->subscriber->id,
-                    'sent_at' => $this->campaign->send_at,
-                ]);
+            foreach ($this->campaign->emailList->subscribers as $subscriber) {
 
-            Mail::to($this->subscriber->email)->later(
-                $this->campaign->send_at,
-                new EmailCampaign($this->campaign,$mail));
-        }
+                $mail = CampaignMail::query()
+                    ->create([
+                        'campaign_id' => $this->campaign->id,
+                        'subscriber_id' => $subscriber->id,
+                        'sent_at' => $this->campaign->send_at,
+                    ]);
+    
+                Mail::to($this->$subscriber->email)->later(
+                    $this->campaign->send_at,
+                    new EmailCampaign($this->campaign,$mail));
+            }
+    
+       
     }
 }

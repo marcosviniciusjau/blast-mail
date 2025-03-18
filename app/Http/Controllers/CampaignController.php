@@ -10,6 +10,8 @@ use App\Models\EmailList;
 use App\Models\Template;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class CampaignController extends Controller
 {
@@ -109,8 +111,30 @@ class CampaignController extends Controller
 
         if ($tab == 'schedule') {
             $campaign = Campaign::create($data);
-
-            SendEmailsCampaign::dispatchAfterResponse($campaign);
+            $logs = [];
+        
+            if ($campaign) {
+        
+                if (!isset($data)) {
+                    return response()->json([
+                        'error' => 'O campo "recipient" é obrigatório para enviar o e-mail.'
+                    ], 400);
+                }
+        
+                try {
+                      SendEmailsCampaign::dispatchSync($campaign);
+                 
+                    $logs[] = 'E-mail enviado com sucesso para ' ;
+                    
+                    return response()->redirectTo($toRoute);
+                } catch (\Exception $e) {
+                    $logs[] = 'Erro ao enviar e-mail: ' . $e->getMessage();
+                }
+            } else {
+                $logs[] = 'Falha ao criar campanha.';
+            }
+        
+            return response()->json(['logs' => $logs]);
         }
 
         return response()->redirectTo($toRoute);

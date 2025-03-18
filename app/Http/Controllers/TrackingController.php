@@ -3,20 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\CampaignMail;
-use Illuminate\Http\Request;
 
 class TrackingController extends Controller
 {
-    public function openings(CampaignMail $mail){
-        $mail->openings ++;
+    public function openings(CampaignMail $mail)
+    {
+        if (! $mail->campaign->track_open) {
+            return;
+        }
+        $mail->openings++;
         $mail->save();
     }
 
-    public function clicks(CampaignMail $mail){
-        $mail->clicks ++;
-        $mail->save();
+    public function clicks(CampaignMail $mail)
+    {
+        if ($mail->campaign->track_click) {
+            $mail->clicks++;
+            $mail->save();
+        }
 
         return redirect()->away(request()->get('f'));
     }
-    
 }

@@ -6,26 +6,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TrackingController;
-use App\Http\Middleware\CampaignCreateSessionControl;
-use App\Jobs\SendEmailsCampaign;
-use App\Mail\EmailCampaign;
 use App\Models\Campaign;
-use App\Models\CampaignMail;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailCampaign;
+use App\Http\Middleware\CampaignCreateSessionControl;
 use Illuminate\Support\Facades\Route;
-
-
-Route::get('/email', function(){
-    $campaign = Campaign::find(11);
-    $mail = $campaign->mails()->first();
-    $email = new EmailCampaign($campaign,$mail);
-
-    //SendEmailsCampaign::dispatchAfterResponse($campaign);
-
-    return $email->render();
-});
 
 Route::get('/t/{mail}/o', [TrackingController::class, 'openings'])
 ->name('tracking.openings');
@@ -33,15 +17,7 @@ Route::get('/t/{mail}/o', [TrackingController::class, 'openings'])
 Route::get('/t/{mail}/c', [TrackingController::class, 'clicks'])
 ->name('tracking.clicks');
 
-Route::get('/', function () {
-    Auth::loginUsingId(1);
-
-    return to_route('dashboard');
-});
-
-Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','verified')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -58,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('templates', TemplateController::class);
 
     //region Campaigns
-    Route::get('campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
+    Route::get('/', [CampaignController::class, 'index'])->name('campaigns.index');
     Route::get('/campaigns/create/{tab?}', [CampaignController::class, 'create'])
     ->middleware(CampaignCreateSessionControl::class)
     ->name('campaigns.create');
