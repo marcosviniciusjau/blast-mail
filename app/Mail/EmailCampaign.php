@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\Campaign;
 use App\Models\CampaignMail;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,13 +15,17 @@ class EmailCampaign extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(
-        public Campaign $campaign,
-        public CampaignMail $mail
-        ) {
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(public Campaign $campaign, public CampaignMail $mail)
+    {
+        //
+    }
 
-        }
-
+    /**
+     * Get the message envelope.
+     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -28,6 +33,9 @@ class EmailCampaign extends Mailable
         );
     }
 
+    /**
+     * Get the message content definition.
+     */
     public function content(): Content
     {
         return new Content(
@@ -38,18 +46,33 @@ class EmailCampaign extends Mailable
         );
     }
 
-
-    public function getBody(){
+    public function getBody()
+    {
         $body = $this->campaign->body;
-        $pattern = '/href="([^"]*)"/';
-        preg_match_all($pattern, $body, $matches);
-    
-        foreach($matches[1] as $index => $oldValue){
-            $newValue= 'href="'.route('tracking.clicks',['mail'=>$this->mail, 'f'=>$oldValue]) .'"';
-            $body = preg_replace($matches[0][$index], $newValue, $body);
-        }
-        return $body;
-    
-    }
 
+        $pattern = '/href="([^"]*)"/';
+
+        preg_match_all($pattern, $body, $matches);
+        foreach ($matches[1] as $index => $oldValue) {
+            $newValue = 'href="' . route('tracking.clicks', ['mail' => $this->mail, 'f' => $oldValue]) . '"';
+            $body = str_replace($matches[0][$index], $newValue, $body);
+        }
+
+        return $body;
+    }
+    
+    public function getOldValue()
+    {
+        $body = $this->campaign->body;
+
+        $pattern = '/href="([^"]*)"/';
+
+        preg_match_all($pattern, $body, $matches);
+        foreach ($matches[1] as $index => $oldValue) {
+            $newValue = 'href="' . route('tracking.clicks', ['mail' => $this->mail, 'f' => $oldValue]) . '"';
+            $body = str_replace($matches[0][$index], $newValue, $body);
+        }
+
+        return $oldValue;
+    }
 }

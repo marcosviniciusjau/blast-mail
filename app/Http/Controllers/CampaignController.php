@@ -61,7 +61,7 @@ class CampaignController extends Controller
 
     public function create(?string $tab = null)
     {
-        $data = session()->get('campaings::create', [
+        $data =  session()->get('campaigns::create', [
             'name' => null,
             'subject' => null,
             'email_list_id' => null,
@@ -69,32 +69,29 @@ class CampaignController extends Controller
             'body' => null,
             'track_click' => null,
             'track_open' => null,
-            'send_at' => null,
+            'sent_at' => null,
             'send_when' => 'now',
         ]);
 
-        return view('campaigns.create',
-            array_merge(
-                $this->when(blank($tab), fn () => [
-                    'emailLists' => EmailList::query()->select(['id', 'title'])->orderBy('title')->get(),
-                    'templates' => Template::query()->select(['id', 'name'])->orderBy('name')->get(),
-                ], fn () => []),
-                $this->when($tab == 'schedule', fn () => [
-                    'countEmails' => EmailList::find($data['email_list_id'])->subscribers()->count(),
-                    'template' => Template::find($data['template_id'])->name,
-                ], fn () => []),
-                [
-                    'tab' => $tab,
-
-                    'form' => match ($tab) {
-                        'template' => '._template',
-                        'schedule' => '._schedule',
-                        default => '._config',
-                    },
-                    'data' => $data,
-                ]
-            )
-        );
+        return view('campaigns.create', array_merge(
+            $this->when(blank($tab), fn() => [
+                'emailLists' => EmailList::query()->select(['id', 'title'])->orderBy('title')->get(),
+                'templates' => Template::query()->select(['id', 'name'])->orderBy('name')->get(),
+            ], fn() => []),
+            $this->when($tab == 'schedule', fn() => [
+                'countEmails' => EmailList::find($data['email_list_id'])->subscribers()->count(),
+                'template' => Template::find($data['template_id'])->id,    
+            ], fn() => []),
+            [
+                'tab' => $tab,
+                'form' => match ($tab) {
+                    'template' => '._template',
+                    'schedule' => '._schedule',
+                    default => '._config',
+                },
+                'data' => $data,
+            ]
+        ));
     }
 
     public function destroy(Campaign $campaign)
@@ -126,7 +123,7 @@ class CampaignController extends Controller
                  
                     $logs[] = 'E-mail enviado com sucesso para ' ;
                     
-                    return response()->redirectTo($toRoute);
+                    //return response()->redirectTo($toRoute);
                 } catch (\Exception $e) {
                     $logs[] = 'Erro ao enviar e-mail: ' . $e->getMessage();
                 }

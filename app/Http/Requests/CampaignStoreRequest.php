@@ -7,10 +7,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CampaignStoreRequest extends FormRequest
 {
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         $tab = $this->route('tab');
-        $toRoute = '';
         $rules = [];
         $map = array_merge([
             'name' => null,
@@ -20,8 +24,8 @@ class CampaignStoreRequest extends FormRequest
             'body' => null,
             'track_click' => null,
             'track_open' => null,
-            'send_at' => null,
-            'send_when'=>null,
+            'sent_at' => null,
+            'send_when' => null,
         ], $this->all());
 
         if (blank($tab)) {
@@ -41,39 +45,44 @@ class CampaignStoreRequest extends FormRequest
 
         if ($tab == 'schedule') {
             if ($map['send_when'] == 'now') {
-                $map['send_at'] = now()->format('Y-m-d');
-            } else if($map['send_when'] == 'later') {
+                $map['sent_at'] = now()->format('Y-m-d');
+            } elseif ($map['send_when'] == 'later') {
                 $rules = [
-                    'send_at' => ['required', 'date', 'after:today'],
+                    'sent_at' => ['required', 'date', 'after:today'],
                 ];
-            }else{
+            } else {
                 $rules = ['send_when' => ['required']];
             }
         }
 
-        $session = session('campaings::create', $map);
+        // --
+        $session = session('campaigns::create', $map);
+
         foreach ($session as $key => $value) {
             $newValue = data_get($session, $key);
+
             if ($key == 'track_click' || $key == 'track_open') {
                 $session[$key] = $newValue;
             } elseif (filled($newValue)) {
                 $session[$key] = $newValue;
             }
         }
+        // --
 
-        if ($template_id = $session['template_id'] && blank($session['body'])) {
-            $template = Template::find($template_id);
+        if ($templateId = $session['template_id'] && blank($session['body'])) {
+            $template = Template::find($templateId);
             $session['body'] = $template->body;
         }
 
-        session()->put('campaings::create', $session);
+        session()->put('campaigns::create', $session);
 
         return $rules;
     }
 
     public function getData()
     {
-        $session = session()->get('campaings::create');
+        $session = session()->get('campaigns::create');
+
         unset($session['_token']);
         unset($session['send_when']);
 
@@ -86,10 +95,11 @@ class CampaignStoreRequest extends FormRequest
     public function getToRoute()
     {
         $tab = $this->route('tab');
-        $toRoute = '';
+
         if (blank($tab)) {
             return route('campaigns.create', ['tab' => 'template']);
         }
+
         if ($tab == 'template') {
             return route('campaigns.create', ['tab' => 'schedule']);
         }

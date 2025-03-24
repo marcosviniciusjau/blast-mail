@@ -12,7 +12,7 @@ class Campaign extends Model
     use SoftDeletes;
     protected function casts(){
         return [
-            'send_at'=>'datetime',
+            'sent_at'=>'datetime',
         ];
     }
 

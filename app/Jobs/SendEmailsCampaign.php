@@ -21,15 +21,13 @@ class SendEmailsCampaign implements ShouldQueue
     public function handle(): void
     { 
         $env_email = env('MAIL_FROM_ADDRESS');
-
         foreach ($this->campaign->emailList->subscribers as $subscriber) {
 
             $mail = CampaignMail::create([
                 'campaign_id' => $this->campaign->id,
                 'subscriber_id' => $subscriber->id,
-                'sent_at' => $this->campaign->send_at,
+                'sent_at' => $this->campaign->sent_at,
             ]);
-
             Resend::emails()->send([
                 'from' => "Teste Emails <{$env_email}>",
                 'to' => [$subscriber->email],
@@ -37,7 +35,7 @@ class SendEmailsCampaign implements ShouldQueue
                 'subject' => $this->campaign->subject,
                 'html' => (new EmailCampaign($this->campaign, $mail))->render(),
             ]);
-                       
+       
         }
 
     }

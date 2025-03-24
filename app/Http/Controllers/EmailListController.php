@@ -40,7 +40,7 @@ class EmailListController extends Controller
     {
         $request->validate([
             'title' => ['required', 'max:255'],
-            'file' => ['required', 'file', 'mimes.csv'],
+            'file' => ['required', 'file', 'mimes:csv,txt'],
         ]);
         $emails = $this->readCsvFile($request->file('file'));
 

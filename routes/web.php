@@ -25,7 +25,7 @@ Route::middleware('auth','verified')->group(function () {
     //region Email List
     Route::get('/email-list', [EmailListController::class, 'index'])->name('email-list.index');
     Route::get('/email-list/create', [EmailListController::class, 'create'])->name('email-list.create');
-    Route::post('/email-list/store', [EmailListController::class, 'store']);
+    Route::post('/email-list/create', [EmailListController::class, 'store']);
     Route::get('/email-list/{emailList}/subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
     Route::get('/email-list/{emailList}/subscribers/create', [SubscriberController::class, 'create'])->name('subscribers.create');
     Route::post('/email-list/{emailList}/subscribers/create', [SubscriberController::class, 'store']);
@@ -33,17 +33,16 @@ Route::middleware('auth','verified')->group(function () {
 
     Route::resource('templates', TemplateController::class);
 
-    //region Campaigns
     Route::get('/', [CampaignController::class, 'index'])->name('campaigns.index');
     Route::get('/campaigns/create/{tab?}', [CampaignController::class, 'create'])
-    ->middleware(CampaignCreateSessionControl::class)
-    ->name('campaigns.create');
+        ->middleware(CampaignCreateSessionControl::class)
+        ->name('campaigns.create');
     Route::post('/campaigns/create/{tab?}', [CampaignController::class, 'store']);
 
     Route::get('campaigns/{campaign}/{what?}', [CampaignController::class, 'show'])
     ->name('campaigns.show')->withTrashed();
     Route::put('/campaigns/{campaign}/restore', [CampaignController::class, 'restore'])->withTrashed()->name('campaigns.restore');
-    
+
     Route::delete('campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
     
     //end Regions
