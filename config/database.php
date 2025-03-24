@@ -95,7 +95,7 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => 'require',   
-             'options'   => env('DB_OPTIONS'),
+           'options' => extension_loaded('pgsql') ? ['options' => env('DB_OPTIONS')] : [],
         ],
 
         'sqlsrv' => [
