@@ -8,7 +8,7 @@ Blastmail is a Laravel application designed for creating and managing email camp
 
 - 📊 Campaign Builder: Combine email lists and templates to craft personalized campaigns.
 
-- 📡 Email Tracking: Monitor email opens with a hidden pixel and track link clicks for engagement insights.
+- 📡 Email Tracking: Monitor email opens with a hidden image and track link clicks for engagement insights.
 
 - 🔒 Security & Performance: Built with Laravel best practices for secure and efficient email delivery.
 
