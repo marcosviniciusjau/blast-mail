@@ -23,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
         Model::preventLazyLoading(app()->isProduction());
+        if (config('app.env') !== 'local') {
+            URL::forceScheme('https');
+        }
     }
 }
