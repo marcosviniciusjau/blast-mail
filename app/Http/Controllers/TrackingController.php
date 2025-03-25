@@ -21,11 +21,10 @@ class TrackingController extends Controller
         $mail->openings++;
         $mail->save();
     
-        // Baixa a imagem do GitHub (não recomendado em produção por latência)
         $image = Http::get('https://avatars.githubusercontent.com/u/82465988?v=4');
     
         return response($image->body())
-            ->header('Content-Type', 'image/png'); // Content-Type correto da imagem
+            ->header('Content-Type', 'image/png');
     }
     
 

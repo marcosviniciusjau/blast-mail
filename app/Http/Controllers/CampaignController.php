@@ -123,7 +123,7 @@ class CampaignController extends Controller
                  
                     $logs[] = 'E-mail enviado com sucesso para ' ;
                     
-                    //return response()->redirectTo($toRoute);
+                    return response()->redirectTo($toRoute);
                 } catch (\Exception $e) {
                     $logs[] = 'Erro ao enviar e-mail: ' . $e->getMessage();
                 }
