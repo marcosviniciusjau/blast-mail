@@ -5,7 +5,7 @@
             </x-h2>
     </x-slot>
 <x-card>
-    <x-form :action="route('templates.update', $template)" put>
+    <x-form :action="route('templates.update', $template, true)" put>
         <div>
             <x-input.label for="name" :value="__('Name')" />
             <x-input.text id="name" class="block mt-1 w-full" name="name" :value="old('name', $template->name)" autofocus />

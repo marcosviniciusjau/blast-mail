@@ -10,7 +10,7 @@
             <x-button.link href="{{ route('templates.create') }}">
                 {{ __('Create new template') }}
             </x-button.link>
-            <x-form :action="route('templates.index')" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>
+            <x-form :action="route('templates.index', [], true)" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>
                 <x-input.checkbox name="withTrashed" @click="$refs.form.submit()" :label="__('Show trash')" value="1"
                     :checked="$withTrashed" />
                 <x-input.text name="search" :placeholder="__('Search')" :value="$search" class="w-full" />
@@ -28,7 +28,7 @@
 
                             @unless ($template->trashed())
                                 <div>
-                                    <x-form :action="route('templates.destroy', $template)" delete flat
+                                    <x-form :action="route('templates.destroy', $template, true)" delete flat
                                         onsubmit="return confirm('{{ __('Are you sure?') }}')">
 
                                         <x-button.secondary type="submit"> {{ __('Delete') }} </x-button.secondary>

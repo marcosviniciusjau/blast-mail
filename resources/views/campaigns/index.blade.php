@@ -7,10 +7,10 @@
 
     <x-card class="space-y-4">
         <div class="flex justify-between">
-            <x-button.link :href="route('campaigns.create')">
+            <x-button.link :href="route('campaigns.create',[], true)">
                 {{ __('Create new campaign') }}
             </x-button.link>
-            <x-form :action="route('campaigns.index')" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>
+            <x-form :action="route('campaigns.index',[],true)" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>
                 <x-input.checkbox name="withTrashed" @click="$refs.form.submit()" :label="__('Show trash')" value="1"
                     :checked="$withTrashed" />
                 <x-input.text name="search" :placeholder="__('Search')" :value="$search" class="w-full" />
@@ -29,7 +29,7 @@
                         <x-table.td class="flex items-center space-x-4 w-20">
                             @unless ($campaign->trashed())
                                 <div>
-                                    <x-form :action="route('campaigns.destroy', $campaign)" delete flat
+                                    <x-form :action="route('campaigns.destroy', $campaign,true)" delete flat
                                         onsubmit="return confirm('{{ __('Are you sure?') }}')">
 
                                         <x-button.secondary type="submit"> {{ __('Delete') }} </x-button.secondary>
@@ -38,7 +38,7 @@
                                 </div>
                             @else
                                 <div>
-                                    <x-form :action="route('campaigns.restore', $campaign)" patch put
+                                    <x-form :action="route('campaigns.restore', $campaign, true)" patch put
                                         onsubmit="return confirm('{{ __('Are you sure?') }}')">
 
                                         <x-button.secondary danger type="submit"> {{ __('Restore') }} </x-button.secondary>

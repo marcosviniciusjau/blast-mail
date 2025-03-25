@@ -12,7 +12,7 @@
                 <x-button.link href="{{ route('email-list.create') }}">
                     {{ __('Create a new email list') }}
                 </x-button.link>   
-                <x-form :action="route('email-list.index')" class="w-2/5">
+                <x-form :action="route('email-list.index',[],true)" class="w-2/5">
                     <x-input.text name="search" :placeholder="__('Search')" :value="$search"/>
                 </x-form>
             </div>

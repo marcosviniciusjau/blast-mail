@@ -1,5 +1,5 @@
 <x-layouts.guest>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register', [], true) }}">
         @csrf
 
         <!-- Name -->

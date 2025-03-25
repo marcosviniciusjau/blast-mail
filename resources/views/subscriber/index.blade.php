@@ -10,7 +10,7 @@
             <x-button.link href="{{ route('subscribers.create', $emailList) }}">
                 {{ __('Add a new subscriber') }}
             </x-button.link>
-            <x-form :action="route('subscribers.index', $emailList)" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>
+            <x-form :action="route('subscribers.index', $emailList, true)" x-data x-ref="form" class="w-3/5 flex space-x-4 items-center" flat>
                 <x-input.checkbox name="withTrashed" @click="$refs.form.submit()" :label="__('Show trash')" value="1"
                     :checked="$withTrashed" />
                 <x-input.text name="search" :placeholder="__('Search')" :value="$search" class="w-full" />
@@ -25,7 +25,7 @@
                         <x-table.td>{{ $subscriber->email }}</x-table.td>
                         <x-table.td class="flex items-center space-x-4 w-20">
                             @unless ($subscriber->trashed())
-                                <x-form :action="route('subscribers.destroy', [$emailList, $subscriber])" delete flat
+                                <x-form :action="route('subscribers.destroy', [$emailList, $subscriber], true)" delete flat
                                     onsubmit="return confirm('{{ __('Are you sure?') }}')">
                                     <x-button.secondary type="submit"> Delete </x-button.secondary>
                                 </x-form>
